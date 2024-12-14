@@ -4,7 +4,7 @@ import expenseIcon from "../assets/cash-register-svgrepo-com.svg";
 
 export const AddUserLink = () => (
   <Link to="/add-user">
-    <button className="flex items-center gap-1">
+    <button tabIndex={1} className="flex items-center gap-1">
       Add User
       <img className="w-4" src={addIcon} alt="+" />
     </button>
@@ -12,7 +12,7 @@ export const AddUserLink = () => (
 );
 export const AddExpenseLink = () => (
   <Link to="/add-expense">
-    <button className="flex items-center gap-1">
+    <button tabIndex={1} className="flex items-center gap-1">
       Add Expense
       <img className="w-4" src={expenseIcon} alt="+" />
     </button>

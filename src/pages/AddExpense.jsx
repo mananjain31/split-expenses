@@ -89,9 +89,10 @@ export default function AddExpense({ users, addExpense }) {
         onSubmit={handleSubmit}
         className="flex flex-col  justify-start gap-2 "
       >
-        <div className="flex flex-col gap-4 md:flex-row md:gap-8">
+        <div className="flex flex-wrap gap-4  md:gap-8">
           <FormGroup>
             <Input
+              autoFocus
               label="Description"
               className="w-32"
               type="text"

@@ -74,7 +74,9 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Home {...{ users, setUsers, addUser, expenses }} />}
+            element={
+              <Home {...{ users, setUsers, addUser, expenses, setExpenses }} />
+            }
           />
           <Route
             path="/add-user"

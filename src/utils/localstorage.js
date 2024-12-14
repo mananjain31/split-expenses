@@ -37,6 +37,6 @@ export const setterWithLocalStorage = (name, setter) => (arg) => {
     });
   } else {
     updateLocalStorage(arg);
-    setter(state);
+    setter(arg);
   }
 };

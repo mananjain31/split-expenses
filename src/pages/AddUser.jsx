@@ -20,6 +20,7 @@ export default function AddUser({ addUser, checkDuplicateUsername }) {
     >
       <h2 className="text-3xl">Add User</h2>
       <Input
+        autoFocus
         type="text"
         placeholder="Name"
         value={name}

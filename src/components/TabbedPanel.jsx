@@ -1,6 +1,11 @@
 import React from "react";
 
-export default function TabbedPanel({ tabs, activeTab, setActiveTab }) {
+export default function TabbedPanel({
+  tabs,
+  activeTab,
+  setActiveTab,
+  actions,
+}) {
   return (
     <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
       {tabs.map((tab) => (
@@ -19,6 +24,16 @@ export default function TabbedPanel({ tabs, activeTab, setActiveTab }) {
           >
             {tab}
           </div>
+        </li>
+      ))}
+      {actions.map((action, idx) => (
+        <li
+          key={idx + "action"}
+          className={`${
+            idx === 0 ? "ml-auto" : ""
+          } cursor-pointer flex items-end pb-2`}
+        >
+          {action}
         </li>
       ))}
     </ul>
