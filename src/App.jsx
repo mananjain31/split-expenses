@@ -59,7 +59,7 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <div className="flex gap-4">
         <h1>Split Expenses</h1>
       </div>
