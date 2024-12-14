@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { useEffect } from "react";
 import { User } from "./models/User";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Link, Route, Routes } from "react-router";
 import Home from "./pages/Home";
 import AddUser from "./pages/AddUser";
 import { Expense } from "./models/Expense";
@@ -11,9 +11,10 @@ import {
   clearLocalStorage,
   setStateFromLocalStorage,
   setterWithLocalStorage,
-  updateLocalStorage,
 } from "./utils/localstorage";
 import { f } from "./utils/floatConverter";
+import { getUpdatedUsersformExpenses } from "./utils/calculations";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [users, _setUsers] = useState([]);
@@ -26,6 +27,9 @@ function App() {
     setStateFromLocalStorage(_setUsers, _setExpenses);
     // clearLocalStorage();
   }, []);
+  useEffect(() => {
+    setUsers((users) => getUpdatedUsersformExpenses(users, expenses));
+  }, [expenses]);
 
   const addUser = (name) => {
     setUsers((users) => [new User(name), ...users]);
@@ -38,42 +42,55 @@ function App() {
     ]);
     // splits = [{id,amount},{id,amount}]
     // users = [{id,name,paid,toRecieve:{id:amount}}]
-    setUsers((users) =>
-      users.map((user) => {
-        if (paidBy != user.id) return user;
-        let totalPaid = user.totalPaid;
-        let toRecieve = { ...user.toRecieve };
-        totalPaid = f(totalPaid) + f(paid);
-        splits.forEach((split) => {
-          const { id: splitUserId, amount } = split;
-          const userId = user.id;
-          if (!toRecieve[splitUserId]) toRecieve[splitUserId] = amount;
-          else toRecieve[splitUserId] = f(toRecieve[splitUserId]) + f(amount);
-        });
+    // setUsers((users) =>
+    //   users.map((user) => {
+    //     if (paidBy != user.id) return user;
+    //     let totalPaid = user.totalPaid;
+    //     let toRecieve = { ...user.toRecieve };
+    //     totalPaid = f(totalPaid) + f(paid);
+    //     splits.forEach((split) => {
+    //       const { id: splitUserId, amount } = split;
+    //       const userId = user.id;
+    //       if (!toRecieve[splitUserId]) toRecieve[splitUserId] = amount;
+    //       else toRecieve[splitUserId] = f(toRecieve[splitUserId]) + f(amount);
+    //     });
 
-        const cloned = user.getUpdatedClone({ ...user, totalPaid, toRecieve });
+    //     const cloned = user.getUpdatedClone({ ...user, totalPaid, toRecieve });
 
-        return cloned;
-      })
-    );
+    //     return cloned;
+    //   })
+    // );
+  };
+  const checkDuplicateUsername = (name) => {
+    console.log(users);
+    for (const user of users) if (name === user.name) return true;
+    return false;
   };
 
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <div className="flex gap-4">
-        <h1>Split Expenses</h1>
+      <div className=" lg:mx-32">
+        <Navbar />
+        <Routes>
+          <Route
+            path="/"
+            element={<Home {...{ users, setUsers, addUser, expenses }} />}
+          />
+          <Route
+            path="/add-user"
+            element={
+              <AddUser
+                addUser={addUser}
+                checkDuplicateUsername={checkDuplicateUsername}
+              />
+            }
+          />
+          <Route
+            path="/add-expense"
+            element={<AddExpense {...{ users, addExpense }} />}
+          />
+        </Routes>
       </div>
-      <Routes>
-        <Route
-          path="/"
-          element={<Home {...{ users, setUsers, addUser, expenses }} />}
-        />
-        <Route path="/add-user" element={<AddUser addUser={addUser} />} />
-        <Route
-          path="/add-expense"
-          element={<AddExpense {...{ users, addExpense }} />}
-        />
-      </Routes>
     </BrowserRouter>
   );
 }

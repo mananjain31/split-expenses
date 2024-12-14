@@ -2,17 +2,18 @@ import { Expense } from "../models/Expense";
 import { User } from "../models/User";
 
 export const updateLocalStorage = (obj) => {
-  const lsobj = localStorage.getItem("obj");
+  const lsobj = localStorage.getItem("obj1");
   const currObj = lsobj ? JSON.parse(lsobj) : { users: [], expenses: [] };
-  localStorage.setItem("obj", JSON.stringify({ ...currObj, ...obj }));
+  localStorage.setItem("obj1", JSON.stringify({ ...currObj, ...obj }));
 };
 
 export const clearLocalStorage = () => {
-  localStorage.clear();
+  // localStorage.clear();
+  localStorage.setItem("obj1", JSON.stringify({ users: [], expenses: [] }));
 };
 
 export const setStateFromLocalStorage = (_setUsers, _setExpenses) => {
-  let lsobj = localStorage.getItem("obj");
+  let lsobj = localStorage.getItem("obj1");
   if (lsobj) {
     _setUsers(
       JSON.parse(lsobj)?.users

@@ -4,7 +4,7 @@ import Label from "../components/Label";
 import Input from "../components/Input";
 import FormGroup from "../components/FormGroup";
 import Select from "../components/Select";
-import { split } from "postcss/lib/list";
+import handScissor from "../assets/hand-scissors.svg";
 
 export default function AddExpense({ users, addExpense }) {
   const [desc, setDesc] = useState("");
@@ -89,47 +89,56 @@ export default function AddExpense({ users, addExpense }) {
         onSubmit={handleSubmit}
         className="flex flex-col  justify-start gap-2 "
       >
-        <FormGroup>
-          <Label htmlFor="name">Description</Label>
-          <Input
-            type="text"
-            placeholder="desc"
-            value={desc}
-            onChange={(ev) => setDesc(ev.target.value)}
-            id="desc"
-            required
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="totalAmount">Total Amount Paid</Label>
-          <Input
-            type="number"
-            placeholder="Name"
-            value={totalAmt}
-            onChange={(ev) => setTotalAmt(ev.target.value)}
-            id="totalAmt"
-            required
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="padiBy">Paid By</Label>
-          <Select
-            value={paidBy}
-            onChange={(ev) => setPaidBy(ev.target.value)}
-            className="py-2 px-4"
-            id="paidBy"
-            options={users.map((user) => [user.id, user.name])}
-            required
-          />
-        </FormGroup>
-        <FormGroup className="pt-6">
-          <Label className="text-2xl font-normal">Splits:-</Label>
-          <button type="button" onClick={splitEqually}>
-            Click here to split equally
+        <div className="flex flex-col gap-4 md:flex-row md:gap-8">
+          <FormGroup>
+            <Input
+              label="Description"
+              className="w-32"
+              type="text"
+              placeholder="Description"
+              value={desc}
+              onChange={(ev) => setDesc(ev.target.value)}
+              id="desc"
+              required
+            />
+          </FormGroup>
+          <FormGroup>
+            <Input
+              label="Total Amout Paid"
+              type="number"
+              value={totalAmt}
+              onChange={(ev) => setTotalAmt(ev.target.value)}
+              id="totalAmt"
+              required
+            />
+          </FormGroup>
+          <FormGroup>
+            <Select
+              label="Paid By"
+              value={paidBy}
+              onChange={(ev) => setPaidBy(ev.target.value)}
+              id="paidBy"
+              options={users.map((user) => [user.id, user.name])}
+              placeholder="Paid by"
+              required
+            />
+          </FormGroup>
+        </div>
+        <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+
+        <FormGroup className="">
+          <Label className="text-3xl font-normal">Splits</Label>
+          <button
+            type="button"
+            onClick={splitEqually}
+            className="flex items-center gap-1"
+          >
+            Split equally
+            <img className="w-7" src={handScissor} alt="+" />
           </button>
         </FormGroup>
         {splits.map((split) => (
-          <FormGroup key={split.id + "ads"}>
+          <div key={split.id + "ads"} className="grid grid-cols-2 text-left">
             <Label>{split.name}</Label>
             <Input
               type="number"
@@ -140,9 +149,22 @@ export default function AddExpense({ users, addExpense }) {
               required
               step=".02"
             />
-          </FormGroup>
+          </div>
+          // <FormGroup key={split.id + "ads"}>
+          //   <Label>{split.name}</Label>
+          //   <Input
+          //     type="number"
+          //     placeholder="Name"
+          //     value={split.amount}
+          //     onChange={(ev) => updateSplit(split.id, ev.target.value)}
+          //     id="totalAmt"
+          //     required
+          //     step=".02"
+          //   />
+          // </FormGroup>
         ))}
-        <div className="flex gap-4 py-2">
+        <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+        <div className="flex gap-4">
           <button>
             Add Expense {"( Unsplitted Amount = " + unsplittedAmt + ")"}
           </button>

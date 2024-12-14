@@ -23,17 +23,6 @@ function Home({ users, setUsers, expenses }) {
 
   return (
     <div>
-      {/* <div>{JSON.stringify(users)}</div> */}
-      <div className="flex gap-2 py-4">
-        <Link to="/add-user">
-          <button>Add User</button>
-        </Link>
-        <Link to="/add-expense">
-          <button>Add Expense</button>
-        </Link>
-      </div>
-      {/* <div>Expenses: {JSON.stringify(expenses, 2)}</div>
-      <div>Users: {JSON.stringify(users, 2)}</div> */}
       <div>
         <TabbedPanel {...{ activeTab, setActiveTab, tabs }} />
         {activeTab === "Final Calculations" && <UsersTable users={users} />}
