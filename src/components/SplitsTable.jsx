@@ -17,7 +17,7 @@ export default function AccorianTable({ splits, users }) {
             </th>
             {users.map((user) => (
               <th key={user.id + "split"} scope="col" className="px-6 py-3">
-                user.name
+                {user.name}
               </th>
             ))}
           </tr>

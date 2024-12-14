@@ -5,7 +5,9 @@ import arrowDown from "../assets/arrow-circle-down-svgrepo-com.svg";
 import arrowUp from "../assets/arrow-circle-up-svgrepo-com.svg";
 
 export default function ExpenseHistory({ expenses, users }) {
-  const [isAccOpen, toggleAccordian] = useAccordian(expenses.length);
+  const { isAccOpen, toggleAccordian, toggleAllAccordian, allOpen } =
+    useAccordian(expenses.length);
+  console.log(isAccOpen);
 
   const getUserNameById = (id) => {
     for (const user of users) {
@@ -16,8 +18,8 @@ export default function ExpenseHistory({ expenses, users }) {
   return (
     <div className="relative overflow-x-auto">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
+        <thead className="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400 cursor-pointer">
+          <tr onClick={() => toggleAllAccordian()}>
             <th scope="col" className="px-6 py-3">
               Description
             </th>
@@ -30,7 +32,13 @@ export default function ExpenseHistory({ expenses, users }) {
             <th scope="col" className="px-6 py-3">
               Date - Time
             </th>
-            <th scope="col" className="px-6 py-3"></th>
+            <th scope="col" className="px-6 py-3">
+              <img
+                className="w-6 min-w-5"
+                src={!allOpen ? arrowDown : arrowUp}
+                alt="expand-collapse all"
+              />
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -50,9 +58,9 @@ export default function ExpenseHistory({ expenses, users }) {
                 <td className="px-6 py-4">{getUserNameById(expense.paidBy)}</td>
                 <td className="px-6 py-4">{expense.totalPaid}</td>
                 <td className="py-4">{expense.dateTime}</td>
-                <td className="py-4">
+                <td className="px-6 py-4">
                   <img
-                    className="w-6 text-white"
+                    className="w-6 min-w-5"
                     src={isAccOpen[idx] ? arrowUp : arrowDown}
                   />
                 </td>

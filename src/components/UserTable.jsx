@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getCalculations } from "../utils/calculations";
+import { f } from "../utils/floatConverter";
 
 export default function UsersTable({ users, ...props }) {
   const [matrix, setMatrix] = useState(users.map(() => users.map((u) => [])));
@@ -41,16 +42,22 @@ export default function UsersTable({ users, ...props }) {
                   {user.name} owes
                 </th>
                 {users.map((inuser, c) => {
-                  let val = 0;
-                  if (inuser.id === user.id) val = "-";
-                  else val = user.toRecieve[inuser.id] || "-";
+                  let val = matrix[r] ? matrix[r][c] || "-" : "-";
+                  let titleText = "";
+                  if (val !== "-" && f(val) < 0)
+                    titleText = `${user.name} will recieve ${-f(
+                      val
+                    )} amount from ${inuser.name}`;
+                  else if (val !== "-")
+                    titleText = `${user.name} owes ${inuser.name}  ${val} Amount`;
+
                   return (
                     <td
                       key={inuser.id + "inuser"}
-                      className="px-6 py-4"
-                      title={`${inuser.name} owes ${user.name} - ${val} Amount`}
+                      className="px-6 py-4 cursor-pointer"
+                      title={titleText}
                     >
-                      {matrix[r] ? matrix[r][c] || "-" : "-"}
+                      {val}
                     </td>
                   );
                 })}
