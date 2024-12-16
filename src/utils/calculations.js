@@ -28,11 +28,11 @@ export const getUpdatedUsersformExpenses = (users, expenses) => {
     let totalPaid = 0;
     let toRecieve = {};
     expenses.forEach((expense) => {
-      if (user.id == expense.paidBy)
-        totalPaid = f(totalPaid) + f(expense.totalPaid);
-      else
-        for (const split of expense.splits)
-          toRecieve[split.id] = f(toRecieve[split.id] || 0) + f(split.amount);
+      if (user.id != expense.paidBy) return;
+      totalPaid = f(totalPaid) + f(expense.totalPaid);
+      for (const split of expense.splits)
+        toRecieve[split.id] =
+          f(toRecieve[split.id] || 0) + f(split.amount || 0);
     });
     return user.getUpdatedClone({ totalPaid, toRecieve });
   });

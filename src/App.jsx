@@ -62,7 +62,6 @@ function App() {
     // );
   };
   const checkDuplicateUsername = (name) => {
-    console.log(users);
     for (const user of users) if (name === user.name) return true;
     return false;
   };

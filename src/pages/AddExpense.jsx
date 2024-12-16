@@ -28,10 +28,6 @@ export default function AddExpense({ users, addExpense }) {
           Number(parseFloat(amount).toFixed(2));
         return { ...split, amount };
       });
-      console.log(
-        parseFloat(calcTot).toFixed(2),
-        parseFloat(totalAmt).toFixed(2)
-      );
       if (
         Number(parseFloat(calcTot).toFixed(2)) <=
         Number(parseFloat(totalAmt).toFixed(2))
