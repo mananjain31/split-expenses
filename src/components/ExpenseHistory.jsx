@@ -33,11 +33,15 @@ export default function ExpenseHistory({ expenses, users }) {
               Date - Time
             </th>
             <th scope="col" className="px-6 py-3">
-              <img
-                className="w-6 min-w-5"
-                src={!allOpen ? arrowDown : arrowUp}
-                alt="expand-collapse all"
-              />
+              {expenses.length ? (
+                <img
+                  className="w-6 min-w-5"
+                  src={!allOpen ? arrowDown : arrowUp}
+                  alt="expand-collapse all"
+                />
+              ) : (
+                <></>
+              )}
             </th>
           </tr>
         </thead>

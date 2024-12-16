@@ -16,15 +16,22 @@ export default function UsersTable({ users, ...props }) {
 
   return (
     <>
-      <div className="relative overflow-x-auto">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <div className="relative overflow-auto max-h-[70vh]">
+        <table className="table-auto w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" className="px-6 py-3">
+              <th
+                scope="col"
+                className="sticky top-0 left-0 z-50 bg-gray-50 dark:bg-gray-700 px-6 py-3"
+              >
                 Users
               </th>
               {users.map((user) => (
-                <th key={user.id + "th"} scope="col" className="px-6 py-3">
+                <th
+                  key={user.id + "th"}
+                  scope="col"
+                  className="sticky top-0  bg-gray-50 dark:bg-gray-700  z-20 px-6 py-3"
+                >
                   {user.name}
                 </th>
               ))}
@@ -48,7 +55,7 @@ export default function UsersTable({ users, ...props }) {
                 >
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="sticky left-0  bg-inherit px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     {user.name} owes
                   </th>
@@ -82,7 +89,10 @@ export default function UsersTable({ users, ...props }) {
                 <th scope="row" className="mt-4 px-6 py-3 text-base"></th>
               </tr>
               <tr className="font-semibold text-gray-900 dark:text-white border dark:border-gray-700">
-                <th scope="row" className="mt-4 px-6 py-3 text-base">
+                <th
+                  scope="row"
+                  className="sticky left-0 bg-gray-50 dark:bg-gray-800 mt-4 px-6 py-3 text-base"
+                >
                   Total Recieving
                 </th>
                 {totalRecieving.map((val, i) => (
@@ -92,7 +102,10 @@ export default function UsersTable({ users, ...props }) {
                 ))}
               </tr>
               <tr className="font-semibold text-gray-900 dark:text-white border dark:border-gray-700">
-                <th scope="row" className="px-6 py-3 text-base">
+                <th
+                  scope="row"
+                  className="sticky left-0 bg-gray-50 dark:bg-gray-800 px-6 py-3 text-base"
+                >
                   Total Paid
                 </th>
                 {totalPaid.map((val, i) => (
