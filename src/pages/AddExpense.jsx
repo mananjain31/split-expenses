@@ -70,7 +70,7 @@ export default function AddExpense({ users, addExpense }) {
         Number(parseFloat(split.amount).toFixed(2));
     let unsplittedAmt = Number(totalAmt) - Number(splittedAmt);
     if (unsplittedAmt < 0) {
-      resetSplits();
+      // resetSplits();
       setUnsplittedAmt(totalAmt);
     }
     setUnsplittedAmt(parseFloat(unsplittedAmt).toFixed(2));
