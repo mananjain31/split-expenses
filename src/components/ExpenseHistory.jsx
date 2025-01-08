@@ -1,13 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import SplitsTable from "./SplitsTable.jsx";
 import { useAccordian } from "../hooks/useAccordian";
 import arrowDown from "../assets/arrow-circle-down-svgrepo-com.svg";
-import arrowUp from "../assets/arrow-circle-up-svgrepo-com.svg";
+import editIcon from "../assets/edit-icon.svg";
+import deleteIcon from "../assets/delete-icon.svg";
 import { AddExpenseLink } from "./Navbar.jsx";
+import SplitsView from "./SplitsView.jsx";
+import PopUpModal from "./PopUpModal.jsx";
+import useToggle from "../hooks/useToggle.js";
 
-export default function ExpenseHistory({ expenses, users }) {
+const ArrowComp = ({ open }) => (
+  <img
+    className={`w-6 min-w-5 ${
+      open
+        ? "transition-all duration-200 -rotate-180"
+        : "transition-all duration-200 -rotate-0"
+    }`}
+    src={arrowDown}
+  />
+);
+
+const DeleteIconButton = ({ onClick, id }) => (
+  <button
+    onClick={(ev) => onClick(ev, id)}
+    className="bg-inherit px-2 py-2 flex text-red-200 focus:outline-none hover:border-red-400"
+  >
+    <img className={`text-red-300 w-6 min-w-5`} src={deleteIcon} />
+  </button>
+);
+
+const EditIconButton = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    className="bg-inherit px-2 py-2 flex focus:outline-none text-red-200 "
+  >
+    <img className={`text-red-300 w-6 min-w-5`} src={editIcon} />
+  </button>
+);
+
+export default function ExpenseHistory({ deleteExpense, expenses, users }) {
   const { isAccOpen, toggleAccordian, toggleAllAccordian, allOpen } =
     useAccordian(expenses.length);
+
+  const [popupOpen, togglePopup] = useToggle(false);
+  const [selectedId, setSelectedId] = useState();
 
   const getUserNameById = (id) => {
     for (const user of users) {
@@ -15,6 +51,23 @@ export default function ExpenseHistory({ expenses, users }) {
     }
     return "";
   };
+
+  const onDeleteClick = (ev, id) => {
+    ev.stopPropagation();
+    setSelectedId(id);
+    togglePopup();
+  };
+  const deleteExpenseConfirmed = () => {
+    togglePopup();
+    if (selectedId !== 0 && !selectedId) return;
+    // delete expense
+    deleteExpense(selectedId);
+  };
+
+  const onEditClick = (ev) => {
+    ev.stopPropagation();
+  };
+
   return (
     <div className="relative overflow-x-auto">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -32,17 +85,15 @@ export default function ExpenseHistory({ expenses, users }) {
             <th scope="col" className="px-6 py-3">
               Date - Time
             </th>
-            <th scope="col" className="px-6 py-3">
-              {expenses.length ? (
-                <img
-                  className="w-6 min-w-5"
-                  src={!allOpen ? arrowDown : arrowUp}
-                  alt="expand-collapse all"
-                />
-              ) : (
-                <></>
-              )}
-            </th>
+            {expenses.length > 0 && (
+              <>
+                <th scope="col" className="px-6 py-3"></th>
+                <th scope="col" className="px-6 py-3"></th>
+                <th scope="col" className="px-6 py-3">
+                  {expenses.length ? <ArrowComp open={allOpen} /> : <></>}
+                </th>
+              </>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -75,11 +126,15 @@ export default function ExpenseHistory({ expenses, users }) {
                   </td>
                   <td className="px-6 py-4">{expense.totalPaid}</td>
                   <td className="py-4">{expense.dateTime}</td>
+
+                  <td scope="col" className="py-3">
+                    <EditIconButton onClick={onEditClick} />
+                  </td>
+                  <td scope="col" className="py-3">
+                    <DeleteIconButton onClick={onDeleteClick} id={expense.id} />
+                  </td>
                   <td className="px-6 py-4">
-                    <img
-                      className="w-6 min-w-5"
-                      src={isAccOpen[idx] ? arrowUp : arrowDown}
-                    />
+                    <ArrowComp open={isAccOpen[idx]} />
                   </td>
                 </tr>
                 <tr
@@ -87,12 +142,13 @@ export default function ExpenseHistory({ expenses, users }) {
                   bg-white border-b dark:bg-gray-800 dark:border-gray-700 
                   `}
                 >
-                  <td colSpan={5}>
+                  <td colSpan={7}>
                     <div
                       className={`overflow-hidden transition-all duration-300 ease-in-out
                     ${isAccOpen?.[idx] ? "max-h-screen" : "max-h-0"}`}
                     >
-                      <SplitsTable splits={expense.splits} users={users} />
+                      {/* <SplitsTable splits={expense.splits} users={users} /> */}
+                      <SplitsView splits={expense.splits} users={users} />
                     </div>
                   </td>
                 </tr>
@@ -101,6 +157,12 @@ export default function ExpenseHistory({ expenses, users }) {
           )}
         </tbody>
       </table>
+      <PopUpModal
+        open={popupOpen}
+        content={"Are you sure you want to delete this expense ?"}
+        onAccept={deleteExpenseConfirmed}
+        onClose={togglePopup}
+      />
     </div>
   );
 }

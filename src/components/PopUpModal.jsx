@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PopUpModal({ open, onClose, onAccept }) {
+export default function PopUpModal({ content, open, onClose, onAccept }) {
   return (
     <div
       id="popup-modal"
@@ -51,8 +51,7 @@ export default function PopUpModal({ open, onClose, onAccept }) {
               />
             </svg>
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Are you sure you want to clear All records (users and expenses
-              data)?
+              {content}
             </h3>
             <button
               data-modal-hide="popup-modal"

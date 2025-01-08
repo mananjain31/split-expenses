@@ -40,26 +40,10 @@ function App() {
       ...expenses,
       new Expense({ description, paidBy, splits, totalPaid: paid }),
     ]);
-    // splits = [{id,amount},{id,amount}]
-    // users = [{id,name,paid,toRecieve:{id:amount}}]
-    // setUsers((users) =>
-    //   users.map((user) => {
-    //     if (paidBy != user.id) return user;
-    //     let totalPaid = user.totalPaid;
-    //     let toRecieve = { ...user.toRecieve };
-    //     totalPaid = f(totalPaid) + f(paid);
-    //     splits.forEach((split) => {
-    //       const { id: splitUserId, amount } = split;
-    //       const userId = user.id;
-    //       if (!toRecieve[splitUserId]) toRecieve[splitUserId] = amount;
-    //       else toRecieve[splitUserId] = f(toRecieve[splitUserId]) + f(amount);
-    //     });
-
-    //     const cloned = user.getUpdatedClone({ ...user, totalPaid, toRecieve });
-
-    //     return cloned;
-    //   })
-    // );
+  };
+  const deleteExpense = (id) => {
+    console.log(id);
+    setExpenses((expenses) => [...expenses.filter((e) => e.id !== id)]);
   };
   const checkDuplicateUsername = (name) => {
     for (const user of users) if (name === user.name) return true;
@@ -74,7 +58,16 @@ function App() {
           <Route
             path="/"
             element={
-              <Home {...{ users, setUsers, addUser, expenses, setExpenses }} />
+              <Home
+                {...{
+                  users,
+                  setUsers,
+                  addUser,
+                  expenses,
+                  setExpenses,
+                  deleteExpense,
+                }}
+              />
             }
           />
           <Route

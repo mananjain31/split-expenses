@@ -19,7 +19,7 @@ const ClearAllLocalStorageDataButton = ({ onClick }) => (
   </button>
 );
 
-function Home({ users, setUsers, expenses, setExpenses }) {
+function Home({ users, setUsers, expenses, setExpenses, deleteExpense }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Final Calculations");
   const [popupOpen, togglePopup] = useToggle(false);
@@ -40,10 +40,15 @@ function Home({ users, setUsers, expenses, setExpenses }) {
         />
         {activeTab === "Final Calculations" && <UsersTable users={users} />}
         {activeTab === "Expense History" && (
-          <ExpenseHistory expenses={expenses} users={users} />
+          <ExpenseHistory
+            deleteExpense={deleteExpense}
+            expenses={expenses}
+            users={users}
+          />
         )}
       </div>
       <PopUpModal
+        content={`Are you sure you want to clear All records (users and expenses data)?`}
         open={popupOpen}
         onClose={togglePopup}
         onAccept={clearAllRecords}
