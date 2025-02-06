@@ -6,7 +6,7 @@ import { BrowserRouter, Link, Route, Routes } from "react-router";
 import Home from "./pages/Home";
 import AddUser from "./pages/AddUser";
 import { Expense } from "./models/Expense";
-import AddExpense from "./pages/AddExpense";
+import AddOrEditExpense from "./pages/AddOrEditExpense";
 import {
   clearLocalStorage,
   setStateFromLocalStorage,
@@ -40,6 +40,17 @@ function App() {
       ...expenses,
       new Expense({ description, paidBy, splits, totalPaid: paid }),
     ]);
+  };
+  const updateExpense = (id, description, paidBy, splits, paid) => {
+    alert("expense");
+    setExpenses((expenses) =>
+      expenses.map((expense) => {
+        console.log(expense.id, id);
+        return expense.id == id
+          ? new Expense({ description, paidBy, splits, totalPaid: paid })
+          : expense;
+      })
+    );
   };
   const deleteExpense = (id) => {
     console.log(id);
@@ -81,7 +92,16 @@ function App() {
           />
           <Route
             path="/add-expense"
-            element={<AddExpense {...{ users, addExpense }} />}
+            element={<AddOrEditExpense {...{ users, addExpense }} />}
+          />
+          <Route
+            path="/edit-expense/:id"
+            element={
+              <AddOrEditExpense
+                edit
+                {...{ users, expenses, addExpense, updateExpense }}
+              />
+            }
           />
         </Routes>
       </div>

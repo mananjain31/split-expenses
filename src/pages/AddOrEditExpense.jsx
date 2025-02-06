@@ -1,17 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import Label from "../components/Label";
 import Input from "../components/Input";
 import FormGroup from "../components/FormGroup";
 import Select from "../components/Select";
 import handScissor from "../assets/hand-scissors.svg";
+import { getFromLocalStorage } from "../utils/localstorage";
 
-export default function AddExpense({ users, addExpense }) {
+export default function AddOrEditExpense({
+  users,
+  expenses,
+  addExpense,
+  edit,
+  updateExpense,
+}) {
   const [desc, setDesc] = useState("");
   const [totalAmt, setTotalAmt] = useState(0);
   const [paidBy, setPaidBy] = useState(" ");
   const [splits, setSplits] = useState([]);
   const [unsplittedAmt, setUnsplittedAmt] = useState(0);
+  const formRef = useRef();
+  const { id } = useParams();
 
   const navigate = useNavigate();
 
@@ -52,11 +61,36 @@ export default function AddExpense({ users, addExpense }) {
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
-
-    addExpense(desc, paidBy, splits, totalAmt);
+    edit
+      ? updateExpense(id, desc, paidBy, splits, totalAmt)
+      : addExpense(desc, paidBy, splits, totalAmt);
     navigate("/");
     return false;
   };
+
+  useEffect(() => {
+    if (id !== 0 && !id) return formRef.current.reset();
+    const lsExpenses = expenses.length
+      ? expenses
+      : getFromLocalStorage("expenses");
+    const expense = lsExpenses.find((exp) => exp.id == id);
+    if (!expense) return navigate("/");
+    setDesc(expense.description);
+    setTotalAmt(expense.totalPaid);
+    setPaidBy(expense.paidBy);
+    setTimeout(
+      () =>
+        setSplits(
+          expense.splits.map((split) => {
+            return {
+              ...split,
+              amount: split?.amount,
+            };
+          })
+        ),
+      1
+    );
+  }, [id]);
 
   useEffect(() => {
     setSplits(users.map(({ id, name }) => ({ id, name, amount: 0 })));
@@ -79,9 +113,10 @@ export default function AddExpense({ users, addExpense }) {
   return (
     <>
       <div className="flex my-4">
-        <h2 className="text-3xl">Add Expenses</h2>
+        <h2 className="text-3xl">{edit ? "Edit" : "Add"} Expenses</h2>
       </div>
       <form
+        ref={formRef}
         onSubmit={handleSubmit}
         className="flex flex-col  justify-start gap-2 "
       >
@@ -163,7 +198,8 @@ export default function AddExpense({ users, addExpense }) {
         <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
         <div className="flex gap-4">
           <button>
-            Add Expense {"( Unsplitted Amount = " + unsplittedAmt + ")"}
+            {edit ? "Update" : "Add"} Expense{" "}
+            {"( Unsplitted Amount = " + unsplittedAmt + ")"}
           </button>
           <button type="button" onClick={() => navigate("/")}>
             Cancel

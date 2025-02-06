@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import SplitsTable from "./SplitsTable.jsx";
 import { useAccordian } from "../hooks/useAccordian";
 import arrowDown from "../assets/arrow-circle-down-svgrepo-com.svg";
 import editIcon from "../assets/edit-icon.svg";
@@ -8,6 +7,7 @@ import { AddExpenseLink } from "./Navbar.jsx";
 import SplitsView from "./SplitsView.jsx";
 import PopUpModal from "./PopUpModal.jsx";
 import useToggle from "../hooks/useToggle.js";
+import { useNavigate } from "react-router";
 
 const ArrowComp = ({ open }) => (
   <img
@@ -29,9 +29,9 @@ const DeleteIconButton = ({ onClick, id }) => (
   </button>
 );
 
-const EditIconButton = ({ onClick }) => (
+const EditIconButton = ({ onClick, id }) => (
   <button
-    onClick={onClick}
+    onClick={(ev) => onClick(ev, id)}
     className="bg-inherit px-2 py-2 flex focus:outline-none text-red-200 "
   >
     <img className={`text-red-300 w-6 min-w-5`} src={editIcon} />
@@ -45,11 +45,18 @@ export default function ExpenseHistory({ deleteExpense, expenses, users }) {
   const [popupOpen, togglePopup] = useToggle(false);
   const [selectedId, setSelectedId] = useState();
 
+  const navigate = useNavigate();
+
   const getUserNameById = (id) => {
     for (const user of users) {
       if (user.id == id) return user.name;
     }
     return "";
+  };
+
+  const onEditClick = (ev, id) => {
+    ev.stopPropagation();
+    navigate("edit-expense/" + id);
   };
 
   const onDeleteClick = (ev, id) => {
@@ -62,10 +69,6 @@ export default function ExpenseHistory({ deleteExpense, expenses, users }) {
     if (selectedId !== 0 && !selectedId) return;
     // delete expense
     deleteExpense(selectedId);
-  };
-
-  const onEditClick = (ev) => {
-    ev.stopPropagation();
   };
 
   return (
@@ -109,9 +112,8 @@ export default function ExpenseHistory({ deleteExpense, expenses, users }) {
             </tr>
           ) : (
             expenses.map((expense, idx) => (
-              <>
+              <React.Fragment key={expense.id + "tbodytr"}>
                 <tr
-                  key={expense.id + "tbodytr"}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
                   onClick={() => toggleAccordian(idx)}
                 >
@@ -128,7 +130,7 @@ export default function ExpenseHistory({ deleteExpense, expenses, users }) {
                   <td className="py-4">{expense.dateTime}</td>
 
                   <td scope="col" className="py-3">
-                    <EditIconButton onClick={onEditClick} />
+                    <EditIconButton onClick={onEditClick} id={expense.id} />
                   </td>
                   <td scope="col" className="py-3">
                     <DeleteIconButton onClick={onDeleteClick} id={expense.id} />
@@ -152,7 +154,7 @@ export default function ExpenseHistory({ deleteExpense, expenses, users }) {
                     </div>
                   </td>
                 </tr>
-              </>
+              </React.Fragment>
             ))
           )}
         </tbody>

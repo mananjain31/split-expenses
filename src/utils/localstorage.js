@@ -28,6 +28,22 @@ export const setStateFromLocalStorage = (_setUsers, _setExpenses) => {
   }
 };
 
+export const getFromLocalStorage = (name) => {
+  let lsobj = localStorage.getItem("obj1");
+  switch (name) {
+    case "expenses":
+      return JSON.parse(lsobj)?.expenses
+        ? JSON.parse(lsobj)?.expenses.map((expense) => new Expense(expense))
+        : [];
+    case "expenses":
+      return JSON.parse(lsobj)?.expenses
+        ? JSON.parse(lsobj)?.expenses.map((expense) => new Expense(expense))
+        : [];
+    default:
+      throw new Error(`Invalid state name to fetch from localstorage: ${name}`);
+  }
+};
+
 export const setterWithLocalStorage = (name, setter) => (arg) => {
   if (typeof arg === "function") {
     setter((state) => {
