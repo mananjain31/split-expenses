@@ -44,7 +44,6 @@ function App() {
   const updateExpense = (id, description, paidBy, splits, paid) => {
     setExpenses((expenses) =>
       expenses.map((expense) => {
-        console.log(expense.id, id);
         return expense.id == id
           ? new Expense({ description, paidBy, splits, totalPaid: paid })
           : expense;
@@ -52,7 +51,6 @@ function App() {
     );
   };
   const deleteExpense = (id) => {
-    console.log(id);
     setExpenses((expenses) => [...expenses.filter((e) => e.id !== id)]);
   };
   const checkDuplicateUsername = (name) => {
