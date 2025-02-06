@@ -42,7 +42,6 @@ function App() {
     ]);
   };
   const updateExpense = (id, description, paidBy, splits, paid) => {
-    alert("expense");
     setExpenses((expenses) =>
       expenses.map((expense) => {
         console.log(expense.id, id);
